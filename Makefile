@@ -8,16 +8,20 @@ CUDA_PATH?=/usr/local/cuda
 # If none of the above worked, try some other common paths
 ifneq ("$(wildcard $(CUDA_PATH))","")
 # The default PATH is good - nothing else to do
+else ifneq ("$(wildcard /usr/local/cuda-11.0)","")
+CUDA_PATH=/usr/local/cuda-11.0
+else ifneq ("$(wildcard /usr/local/cuda-10.2)","")
+CUDA_PATH=/usr/local/cuda-10.2
+else ifneq ("$(wildcard /usr/local/cuda-10.1)","")
+CUDA_PATH=/usr/local/cuda-10.1
+else ifneq ("$(wildcard /usr/local/cuda-10.0)","")
+CUDA_PATH=/usr/local/cuda-10.0
 else ifneq ("$(wildcard /usr/local/cuda-9.0)","")
 CUDA_PATH=/usr/local/cuda-9.0
 else ifneq ("$(wildcard /usr/local/cuda-8.0)","")
 CUDA_PATH=/usr/local/cuda-8.0
 else ifneq ("$(wildcard /usr/local/cuda-7.5)","")
 CUDA_PATH=/usr/local/cuda-7.5
-else ifneq ("$(wildcard /usr/local/cuda-7.0)","")
-CUDA_PATH=/usr/local/cuda-7.0
-else ifneq ("$(wildcard /usr/local/cuda-6.5)","")
-CUDA_PATH=/usr/local/cuda-6.5
 else ifneq ("$(wildcard /opt/cuda)","")
 CUDA_PATH=/opt/cuda
 endif
@@ -32,7 +36,7 @@ CCPATH=${GCCPATH}/bin
 
 all: gpu_burn
 
-NVCCFLAGS=-gencode=arch=compute_20,code=sm_20 -gencode=arch=compute_30,code=sm_30 -gencode=arch=compute_35,code=compute_35 -gencode=arch=compute_37,code=compute_37 -gencode=arch=compute_50,code=sm_50 -gencode=arch=compute_52,code=sm_52 -I. -I${CUDA_PATH}/include --fatbin
+NVCCFLAGS=-gencode=arch=compute_20,code=sm_20 -gencode=arch=compute_30,code=sm_30 -gencode=arch=compute_35,code=compute_35 -gencode=arch=compute_37,code=compute_37 -gencode=arch=compute_50,code=sm_50 -gencode=arch=compute_52,code=sm_52 -gencode=arch=compute_70,code=sm_70 -I. -I${CUDA_PATH}/include --fatbin
 
 gpu_burn.cuda_kernel: compare.cu Makefile
 	PATH=.:${CCPATH}:${PATH} ${NVCC} ${NVCCFLAGS} compare.cu -o $@
